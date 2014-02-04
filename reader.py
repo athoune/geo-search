@@ -4,6 +4,9 @@ import sys
 import codecs
 import re
 
+from elasticsearch import Elasticsearch
+from elasticsearch.helpers import bulk
+
 
 def int_or_none(a):
     if a == '':
@@ -24,5 +27,25 @@ def read(path):
             values['elevation'] = int_or_none(values['elevation'])
             yield values
 
-for v in read(sys.argv[1]):
-    print v
+cpt = 0
+
+def indexer(datas):
+    global cpt
+    for data in datas:
+        cpt += 1
+        if cpt % 10000 == 0:
+            print ".",
+        yield {'name': data['name'],
+               '_index': 'geoname',
+               '_type': 'stuff',
+               '_id': data['geonameid'],
+               'cc': data['country_code']}
+
+es = Elasticsearch()
+if es.indices.exists('geoname'):
+    es.indices.delete('geoname')
+
+bulk(es, indexer(read(sys.argv[1])))
+
+es.indices.refresh('geoname')
+# 36m31.860s for 8600414 documents
