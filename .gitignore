@@ -1,0 +1,7 @@
+.Python
+.ropeproject/
+*.txt
+bin/
+*.zip
+include/
+lib/
