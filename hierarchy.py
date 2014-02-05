@@ -22,5 +22,10 @@ def reverse_ancestor(child):
     a.reverse()
     return a
 
-k = HIERARCHY.keys()[0]
-print reverse_ancestor(k)
+if __name__ == '__main__':
+    from reader import read
+
+    for doc in read('allCountries.txt'):
+        a = ancestors(doc['geonameid'])
+        if a != []:
+            print doc['name'], a
