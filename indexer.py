@@ -9,6 +9,44 @@ from hierarchy import reverse_ancestor
 cpt = 0
 
 
+settings = {
+    'analysis': {
+        'analyzer': {
+            'myPath': {
+                'type': 'custom',
+                'tokenizer': 'path_hierarchy'
+            }
+        }
+    }
+}
+
+
+mappings = {
+    'geoname': {
+        '_all': {
+            'enabled': True
+        },
+        'properties': {
+            'name': {
+                'type': 'string'
+            },
+            'hierarchy': {
+                'type': 'string',
+                'analyzer': 'myPath'
+            },
+            'location': {
+                'type': 'geo_point',
+                'validate': True,
+                "fielddata": {
+                    "format": "compressed",
+                    "precision": "3m"
+                }
+            },
+        },
+    }
+}
+
+
 def indexer(datas):
     global cpt
     for data in datas:
@@ -27,6 +65,11 @@ def indexer(datas):
 es = Elasticsearch()
 if es.indices.exists('geoname'):
     es.indices.delete('geoname')
+
+print es.indices.create(index='geoname', body={
+    'mappings': mappings,
+    'settings': settings}
+)
 
 bulk(es, indexer(read(sys.argv[1])))
 
