@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import logging
 
 from elasticsearch import Elasticsearch
 from elasticsearch.helpers import bulk
@@ -62,6 +63,9 @@ def indexer(datas):
                'hierarchy': '/'.join(reverse_ancestor(data['geonameid']))
                }
 
+logger = logging.getLogger('elasticsearch')
+logger.addHandler(logging.StreamHandler())
+#logger.level = logging.DEBUG
 
 es = Elasticsearch()
 if es.indices.exists('geoname'):
