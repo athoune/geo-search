@@ -56,11 +56,13 @@ def indexer(datas):
         if cpt % 10000 == 0:
             print ".",
         yield {'name': data['name'],
+               'alternate_name': data['alternatenames'].split(','),
                '_index': 'geoname',
-               '_type': 'stuff',
+               '_type': 'geoname',
                '_id': data['geonameid'],
                'cc': data['country_code'],
-               'hierarchy': '/'.join(reverse_ancestor(data['geonameid']))
+               'hierarchy': '/'.join(reverse_ancestor(data['geonameid'])),
+               'location': [data['longitude'], data['latitude']]
                }
 
 logger = logging.getLogger('elasticsearch')
