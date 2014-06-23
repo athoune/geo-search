@@ -32,6 +32,12 @@ mappings = {
             'name': {
                 'type': 'string'
             },
+            'suggest': {
+                'type': 'completion',
+                'index_analyzer' : 'simple',
+                'search_analyzer' : 'simple',
+                'payloads' : True
+            },
             'hierarchy': {
                 'type': 'string',
                 'analyzer': 'myPath'
@@ -82,3 +88,16 @@ bulk(es, indexer(read(sys.argv[1])))
 
 es.indices.refresh('geoname')
 # 36m31.860s for 8600414 documents
+
+print es.indices.stats('geoname')
+#res = es.search(index="geoname", body={"query": {"match_all": {}}})
+#es.search('geoname', {
+    #'query': {
+        #'filtered': {
+            #'filter': {
+                #'term': {'cc': 'FR'}
+            #},
+            #'query': {
+                #'query_string': {'query': 'Gre%'}
+            #}
+        #}}})
