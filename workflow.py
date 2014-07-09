@@ -30,7 +30,8 @@ class Geonames(luigi.Task):
 
     def run(self):
         with zipfile.ZipFile(self.requires().output().open('r'), 'r') as z:
-            z.extractall('data/')
+            with self.output().open('w') as f:
+                f.write(z.read('%s.txt' % self.country))
 
 class RunAll(luigi.Task):
 
