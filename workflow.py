@@ -1,4 +1,5 @@
 import zipfile
+from random import random
 
 import luigi
 import requests
@@ -29,6 +30,8 @@ class Geonames(luigi.Task):
         return luigi.LocalTarget("data/%s.txt" % self.country)
 
     def run(self):
+        if random() < 0.1:
+            raise Exception("Just for the sport")
         with zipfile.ZipFile(self.requires().output().open('r'), 'r') as z:
             with self.output().open('w') as f:
                 f.write(z.read('%s.txt' % self.country))
