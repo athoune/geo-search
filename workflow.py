@@ -4,8 +4,11 @@ from random import random
 import luigi
 import requests
 
-#http://download.geonames.org/export/dump/
+
 class FetchGeonamesZIP(luigi.Task):
+    """\
+Download country archive from geonames website.
+    """
 
     country = luigi.Parameter(default="FR")
 
@@ -20,6 +23,9 @@ class FetchGeonamesZIP(luigi.Task):
 
 
 class Geonames(luigi.Task):
+    """\
+Extract a country archive
+    """
 
     country = luigi.Parameter(default="FR")
 
@@ -30,6 +36,7 @@ class Geonames(luigi.Task):
         return luigi.LocalTarget("data/%s.txt" % self.country)
 
     def run(self):
+        # Just for simulating crash
         if random() < 0.1:
             raise Exception("Just for the sport")
         with zipfile.ZipFile(self.requires().output().open('r'), 'r') as z:
@@ -37,12 +44,17 @@ class Geonames(luigi.Task):
                 f.write(z.read('%s.txt' % self.country))
 
 class RunAll(luigi.Task):
+    """\
+Dummy task that trigger all the work to be done
+    """
 
     def requires(self):
+        # some countries . US data is huge and slow
         for i in ["FR", "US", "GB", "BE", "RU", "CA", "JP", "PT"]:
             yield Geonames(i)
 
     def complete(self):
+        # Nothing to do, just need requierements.
         return False
 
 if __name__ == '__main__':
