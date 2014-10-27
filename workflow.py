@@ -58,4 +58,4 @@ Dummy task that trigger all the work to be done
         return False
 
 if __name__ == '__main__':
-    luigi.run(main_task_cls=RunAll)
+    luigi.run(main_task_cls=RunAll, cmdline_args=['--workers', '4'])
