@@ -9,6 +9,7 @@ from hierarchy import reverse_ancestor
 
 
 settings = {
+    'number_of_replicas': 0,
     'analysis': {
         'analyzer': {
             'myPath': {
@@ -41,11 +42,6 @@ mappings = {
             },
             'location': {
                 'type': 'geo_point',
-                'validate': True,
-                "fielddata": {
-                    "format": "compressed",
-                    "precision": "3m"
-                }
             },
         },
     }
