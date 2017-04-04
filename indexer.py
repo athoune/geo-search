@@ -32,9 +32,9 @@ mappings = {
             },
             'suggest': {
                 'type': 'completion',
-                'index_analyzer': 'simple',
+                'analyzer': 'simple',
                 'search_analyzer': 'simple',
-                'payloads': True
+                'preserve_separators': True
             },
             'hierarchy': {
                 'type': 'string',
